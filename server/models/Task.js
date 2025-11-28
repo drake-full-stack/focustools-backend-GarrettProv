@@ -1,15 +1,23 @@
-const mongoose = require("mongoose");
 
-// TODO: Define your Task schema here
+const mongoose = require('mongoose');
+
 const taskSchema = new mongoose.Schema(
   {
-    // TODO: Add title field (String, required, trim)
-    // TODO: Add completed field (Boolean, default false)
+    title: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    completed: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
-    timestamps: true,
+    timestamps: true, 
   }
 );
 
-const Task = mongoose.model("Task", taskSchema);
+const Task = mongoose.model('Task', taskSchema);
+
 module.exports = Task;

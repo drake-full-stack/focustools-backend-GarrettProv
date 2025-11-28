@@ -32,14 +32,84 @@ app.get("/", (req, res) => {
 
 // TODO: Add your Task routes here
 // POST /api/tasks
+app.post("/api/tasks", async (req, res) => {
+  try {
+    const task = new Task(req.body);
+    const saved = await task.save();
+    res.status(201).json(saved);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
 // GET /api/tasks
+app.get("/api/tasks", async (req, res) => {
+  try {
+    const tasks = await Task.find();
+    res.json(tasks);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // GET /api/tasks/:id
+app.get("/api/tasks/:id", async (req, res) => {
+  try {
+    const task = await Task.findById(req.params.id);
+    if (!task) return res.status(404).json({ error: "Task not found" });
+    res.json(task);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // PUT /api/tasks/:id
+app.put("/api/tasks/:id", async (req, res) => {
+  try {
+    const updated = await Task.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true, runValidators: true }
+    );
+    if (!updated) return res.status(404).json({ error: "Task not found" });
+    res.json(updated);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
 // DELETE /api/tasks/:id
+app.delete("/api/tasks/:id", async (req, res) => {
+  try {
+    const deleted = await Task.findByIdAndDelete(req.params.id);
+    if (!deleted) return res.status(404).json({ error: "Task not found" });
+    res.json({ message: "Task deleted", task: deleted });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 // TODO: Add your Session routes here
 // POST /api/sessions
+app.post("/api/sessions", async (req, res) => {
+  try {
+    const session = new Session(req.body);
+    const saved = await session.save();
+    res.status(201).json(saved);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
 // GET /api/sessions
+app.get("/api/sessions", async (req, res) => {
+  try {
+    const sessions = await Session.find();
+    res.json(sessions);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
